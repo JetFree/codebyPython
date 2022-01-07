@@ -2,6 +2,7 @@ import argparse
 import itertools
 import datetime
 import random
+import string
 
 
 class CombinationGenerator:
@@ -13,8 +14,8 @@ class CombinationGenerator:
         self.write_to_file(comb_list)
 
     def generate_combinations(self):
-        int_list = random.sample("0123456789", self.length)
-        comb_list = list(itertools.product(int_list, repeat=4))
+        int_list = random.sample(string.digits, self.length)
+        comb_list = list(itertools.product(int_list, repeat=self.length))
         random.shuffle(comb_list)
         return comb_list
 
