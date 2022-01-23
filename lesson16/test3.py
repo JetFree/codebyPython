@@ -1,5 +1,6 @@
 import argparse
 import os
+import stat
 
 
 class Runner:
@@ -10,21 +11,40 @@ class Runner:
             self.run_system()
         elif args.chmod:
             print("Chmod parameter")
+            self.run_chmod()
         elif args.tree:
             print("Tree parameter")
+            self.run_dir_tree()
 
     def run_system(self):
-        print(os.getlogin())
-        while (cmd := input("Shell command: ")) != "exit":
-            os.system(cmd)
-        print("The work was completed!")
-
+        while cmd := input("Shell command: "):
+            if cmd == "exit":
+                print("The work was completed!")
+                break
+            elif os.system(cmd) != 0:
+                print("Wrong command, exit!")
+                break
 
     def run_chmod(self):
-        pass
+        while path := input("Enter the path: "):
+            if path == "exit":
+                print("The work was completed!")
+                break
+            elif os.path.exists(path):
+                print(str(oct(stat.S_IMODE(os.lstat(path).st_mode)))[-3:])
+            else:
+                print("The file or directory does not exist!")
 
     def run_dir_tree(self):
-        pass
+        while path := input("Enter the path: "):
+            if path == "exit":
+                print("The work was completed!")
+                break
+            elif os.path.exists(path):
+                result = os.system(f"tree {path}")
+            else:
+                print("The file or directory does not exist!")
+
 
 
 if __name__ == "__main__":
