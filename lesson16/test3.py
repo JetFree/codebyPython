@@ -42,7 +42,7 @@ class Runner:
                 break
             elif os.path.exists(path):
                 file_name = f"wood_{path.split('/')[-1]}"
-                result = os.system(f"tree {path} -o {file_name}")
+                os.system(f"tree {path} -o {file_name}")
                 os.system(f"cat {file_name}")
             else:
                 print("The file or directory does not exist!")
