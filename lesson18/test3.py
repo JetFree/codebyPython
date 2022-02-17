@@ -8,7 +8,7 @@ def read_data():
 
 def print_filtered_jobs(lines_list):
     for line in lines_list:
-        if (res := re.search("(^[КЛМНПРС].{5}[к]$)", line)) is not None:
+        if (res := re.search("(^[КЛМНПРС][а-я]{5}[к]$)", line)) is not None:
             print(res.group())
 
 
