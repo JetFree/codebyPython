@@ -3,7 +3,7 @@ import os
 
 
 def show_image(image_name):
-    os.system(f"open {image_name}")
+    os.system(f"feh {image_name}")
 
 
 if __name__ == "__main__":
