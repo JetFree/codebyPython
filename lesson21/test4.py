@@ -1,26 +1,23 @@
 import multiprocessing
 
 
-class CartridgesBox:
+amount = multiprocessing.Value("i", 150)
 
-    def __init__(self, amount):
-        self.amount = amount
 
-    def get_cartridges(self):
-        with lock:
-            print(self.amount)
-            c_left = 30
-            if self.amount >= 30:
-                self.amount -= 30
-            else:
-                self.amount = 0
-                c_left = self.amount
-            return c_left
+def get_cartridges():
+    global amount
+    c_left = 30
+    if amount.value >= 30:
+        amount.value -= 30
+    else:
+        c_left = amount.value
+        amount.value = 0
+    return c_left
 
 
 def load_cage(number):
-    print(f"Курсант {number} начал снаряжать магазин")
-    cartridges = general_box.get_cartridges()
+    print(f"Курсант {number} начал снаряжать магазин.")
+    cartridges = get_cartridges()
     for i in range(1, cartridges + 1):
         print(i, end=" ")
     print(f"\nКурсант {number} снарядил магазин\n")
@@ -28,7 +25,6 @@ def load_cage(number):
 
 if __name__ == "__main__":
     lock = multiprocessing.Lock()
-    general_box = CartridgesBox(140)
     processes = [multiprocessing.Process(target=load_cage, args=(n,)) for n in range(1, 6)]
     for p in processes:
         p.start()
