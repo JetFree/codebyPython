@@ -2,7 +2,7 @@ import requests
 
 
 def format_str(currency):
-    return f"{currency}: {float(json_content[f'{currency}']):.2f} руб."
+    return "{:9s}{:.2f} руб.".format(currency + ":", float(json_content[f'{currency}']))
 
 
 if __name__ == "__main__":
