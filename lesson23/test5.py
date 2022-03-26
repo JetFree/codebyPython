@@ -4,7 +4,7 @@ from colorama import Fore
 
 def is_vulnerable(url):
     url_s = url.split("=")[0]
-    res = requests.get(f"{url_s}=\"")
+    res = requests.get(f"{url_s}=\"", allow_redirects=False)
     if res.content.decode().lower().find("error") == -1:
         return False
     else:
