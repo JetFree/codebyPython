@@ -36,7 +36,7 @@ def check_site_annotaion(hostname):
         response.raise_for_status()
         if response.status_code == 200:
             print('OK!')
-    except (requests.exceptions.HTTPError, requests.exceptions.Timeout) as e:
+    except (requests.exceptions.HTTPError, requests.exceptions.Timeout, requests.exceptions.ConnectionError) as e:
         print('ERROR: %s' % e)
 
     set_url_format(hostname)
@@ -47,6 +47,7 @@ def set_url_format(hostname):
     global DOMAIN
     if hostname[-1] != "/":
         hostname += "/"
+        DOMAIN = hostname
     else:
         DOMAIN = hostname
 
