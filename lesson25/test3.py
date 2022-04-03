@@ -104,21 +104,21 @@ def write_to_file(result_list):
         file.writelines(result_list)
 
 
-def get_site_dirs(counter):
+def get_site_dirs():
     """Функция проверки директорий"""
     try:
         results = list()
         while not DIRS.empty():
             target_url = DOMAIN.replace("FUZZ", DIRS.get().strip())
             host_answer = requests.get(target_url)
-            with counter.get_lock():
-                counter.value += 1
+            counter.value += 1
             res_str = f"{'{:>08d}'.format(counter.value)} of {DIRS.qsize()}\t{format_status_code(host_answer.status_code)}\t{target_url}"
             if host_answer.status_code == 404:
                 print(f"{res_str: <80}" + "\r", end="")
             else:
                 print(f"{res_str: <80}")
-                results.append(res_str + "\n")
+                with lock:
+                    results.append(res_str + "\n")
     except KeyboardInterrupt:
         print(Fore.RED + '  ERROR: manually stop Ctrl+C' + Fore.RESET)
     finally:
@@ -137,14 +137,11 @@ def run_main(U, W, T):
     if U is None and W is None:
         print_help()
     check_app_keys(U, W)
-    processes = list()
-    counter = multiprocessing.Value("i", 0, lock=True)
-    for i in range(T+1):
-        mult = multiprocessing.Process(target=get_site_dirs, args=(counter, ))
-        processes.append(mult)
-        mult.start()
+    pool = multiprocessing.Pool(T)
+    pool.apply(get_site_dirs)
 
 
 if __name__ == "__main__":
     lock = multiprocessing.Lock()
+    counter = multiprocessing.Value("i", 0, lock=True)
     run_main()
