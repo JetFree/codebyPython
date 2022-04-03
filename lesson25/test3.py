@@ -8,7 +8,7 @@ import click
 import multiprocessing
 
 DOMAIN = ""
-DIRS = multiprocessing.Queue()
+DIRS = []
 
 
 def greetings():
@@ -88,8 +88,8 @@ def fill_dirs_from_file(dirs_file):
     with open(dirs_file, "r") as reader:
         for line in reader.readlines():
 
-            DIRS.put(line)
-    print("\nЗагружено строк из словаря: " + str(DIRS.qsize()) + "\n")
+            DIRS.append(line)
+    print("\nЗагружено строк из словаря: " + str(len(DIRS)) + "\n")
 
 
 def format_status_code(status_code):
@@ -104,21 +104,20 @@ def write_to_file(result_list):
         file.writelines(result_list)
 
 
-def get_site_dirs():
+def get_site_dirs(dirs_name):
     """Функция проверки директорий"""
     try:
         results = list()
-        while not DIRS.empty():
-            target_url = DOMAIN.replace("FUZZ", DIRS.get().strip())
-            host_answer = requests.get(target_url)
-            counter.value += 1
-            res_str = f"{'{:>08d}'.format(counter.value)} of {DIRS.qsize()}\t{format_status_code(host_answer.status_code)}\t{target_url}"
-            if host_answer.status_code == 404:
-                print(f"{res_str: <80}" + "\r", end="")
-            else:
-                print(f"{res_str: <80}")
-                with lock:
-                    results.append(res_str + "\n")
+        target_url = DOMAIN.replace("FUZZ", dirs_name.strip())
+        host_answer = requests.get(target_url)
+        counter.value += 1
+        res_str = f"{'{:>08d}'.format(counter.value)} of {len(DIRS)}\t{format_status_code(host_answer.status_code)}\t{target_url}"
+        if host_answer.status_code == 404:
+            print(f"{res_str: <80}" + "\r", end="")
+        else:
+            print(f"{res_str: <80}")
+            with lock:
+                results.append(res_str + "\n")
     except KeyboardInterrupt:
         print(Fore.RED + '  ERROR: manually stop Ctrl+C' + Fore.RESET)
     finally:
@@ -138,7 +137,7 @@ def run_main(U, W, T):
         print_help()
     check_app_keys(U, W)
     pool = multiprocessing.Pool(T)
-    pool.apply(get_site_dirs)
+    pool.map(get_site_dirs, DIRS)
 
 
 if __name__ == "__main__":
