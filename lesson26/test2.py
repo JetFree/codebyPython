@@ -48,13 +48,15 @@ def do_decoding(format, string):
             print(f"URLENCODE  ==>  {urllib.parse.unquote(string)}")
         elif format == "HEX":
             backslash_char = "\\"
-            print(f"HEX  ==>  {codecs.decode(string.replace(backslash_char, '').replace('x', ''), 'hex').decode('utf-8')}")
+            print(
+                f"HEX  ==>  {codecs.decode(string.replace(backslash_char, '').replace('x', ''), 'hex').decode('utf-8')}")
         elif format == "ROT13":
             print(f"ROT13  ==>  {codecs.decode(string, 'rot_13')}")
         else:
             print("Wrong coding selected, correct options are: BASE64, BASE32, BASE16, URLENCODE, HEX, ROT13")
     except binascii.Error:
         print("Look like incorrect value entered for this coding")
+
 
 def do_action(action):
     try:
@@ -71,6 +73,7 @@ def do_action(action):
     except InterruptedError:
         print("Program interrupted by user")
         sys.exit(0)
+
 
 if __name__ == "__main__":
     action = get_action()
