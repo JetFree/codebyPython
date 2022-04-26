@@ -56,6 +56,13 @@ def set_url_format(hostname):
         DOMAIN = hostname
 
 
+def set_payload_for_url(url):
+    payload_pattern = "FUZZ"
+    if url.upper().find(payload_pattern) == -1:
+        url = url + payload_pattern
+    return url
+
+
 def print_help():
     with click.get_current_context() as ctx:
         click.echo(ctx.get_help())
@@ -118,14 +125,15 @@ def get_site_dirs(encoding, heads):
     """Функция проверки директорий"""
     counter = 0
     try:
+        url = set_payload_for_url(DOMAIN)
         results = list()
         for target_dir in DIRS:
             if encoding == "base64":
-                target_url = DOMAIN.replace("FUZZ", str(base64.b64encode(target_dir.strip().encode("UTF-8")), "utf-8"))
+                target_url = url.replace("FUZZ", str(base64.b64encode(target_dir.strip().encode("UTF-8")), "utf-8"))
             elif encoding == "urlencode":
-                target_url = DOMAIN.replace("FUZZ", urllib.parse.quote(target_dir.strip()))
+                target_url = url.replace("FUZZ", urllib.parse.quote(target_dir.strip()))
             else:
-                target_url = DOMAIN.replace("FUZZ", target_dir.strip())
+                target_url = url.replace("FUZZ", target_dir.strip())
             host_answer = requests.get(target_url, headers=parse_heads(heads))
             counter += 1
             res_str = f"{'{:>08d}'.format(counter)} of {len(DIRS)}\t{format_status_code(host_answer.status_code)}\t{target_url}"
