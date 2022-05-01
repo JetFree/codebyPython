@@ -1,10 +1,11 @@
-import requests
-import sys
-import os
-from colorama import Fore
-import click
 import base64
+import os
+import sys
 import urllib.parse
+
+import click
+import requests
+from colorama import Fore
 
 DOMAIN = ""
 DIRS = []
@@ -109,44 +110,30 @@ def write_to_file(result_list):
 
 
 def parse_heads(head_string):
-    head_dict = dict()
-    head_string = head_string.strip()
-    if head_string.find(',') > -1:
-        for head in head_string.split(","):
-            name, value = head.strip().split(':')
-            head_dict[name.strip()] = value.strip()
-    else:
-        name, value = head_string.strip().split(':')
-        head_dict[name] = value.strip()
+    head_dict = {block.split(":")[0].strip(): block.split(":")[1].strip() for block in head_string.strip().split(",")}
     return head_dict
 
 
 def get_site_dirs(encoding, heads):
     """Функция проверки директорий"""
-    counter = 0
-    try:
-        url = set_payload_for_url(DOMAIN)
-        results = list()
-        for target_dir in DIRS:
-            if encoding == "base64":
-                target_url = url.replace("FUZZ", str(base64.b64encode(target_dir.strip().encode("UTF-8")), "utf-8"))
-            elif encoding == "urlencode":
-                target_url = url.replace("FUZZ", urllib.parse.quote(target_dir.strip()))
-            else:
-                target_url = url.replace("FUZZ", target_dir.strip())
-            host_answer = requests.get(target_url, headers=parse_heads(heads))
-            counter += 1
-            res_str = f"{'{:>08d}'.format(counter)} of {len(DIRS)}\t{format_status_code(host_answer.status_code)}\t{target_url}"
-            if host_answer.status_code == 404:
-                print(f"{res_str: <80}" + "\r", end="")
-            else:
-                print(f"{res_str: <80}")
-                results.append(res_str + "\n")
-    except KeyboardInterrupt:
-        print(Fore.RED + '  ERROR: manually stop Ctrl+C' + Fore.RESET)
-    finally:
-        if len(results) > 0:
-            write_to_file(results)
+    url = set_payload_for_url(DOMAIN)
+    results = list()
+    for counter, target_dir in enumerate(DIRS):
+        if encoding == "base64":
+            target_url = url.replace("FUZZ", str(base64.b64encode(target_dir.strip().encode("UTF-8")), "utf-8"))
+        elif encoding == "urlencode":
+            target_url = url.replace("FUZZ", urllib.parse.quote(target_dir.strip()))
+        else:
+            target_url = url.replace("FUZZ", target_dir.strip())
+        host_answer = requests.get(target_url, headers=parse_heads(heads))
+        res_str = f"{'{:>08d}'.format(counter)} of {len(DIRS)}\t{format_status_code(host_answer.status_code)}\t{target_url}"
+        if host_answer.status_code == 404:
+            print(f"{res_str: <80}" + "\r", end="")
+        else:
+            print(f"{res_str: <80}")
+            results.append(res_str + "\n")
+    if len(results) > 0:
+        write_to_file(results)
 
 
 @click.command()
@@ -168,7 +155,10 @@ def run_main(U, W, base, url_enc, head):
         encoding = "base64"
     elif url_enc:
         encoding = "urlencode"
-    get_site_dirs(encoding, head)
+    try:
+        get_site_dirs(encoding, head)
+    except KeyboardInterrupt:
+        print(Fore.RED + '  ERROR: manually stop Ctrl+C' + Fore.RESET)
 
 
 if __name__ == "__main__":
