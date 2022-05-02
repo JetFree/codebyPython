@@ -9,7 +9,7 @@ def get_str_length():
     try:
         length_str = int(input("Количество символов в слове: "))
         if length_str <= 0:
-            raise Exception()
+            raise ValueError()
         return length_str
     except ValueError:
         print("Ошибка! Введите целое число больше нуля!")
