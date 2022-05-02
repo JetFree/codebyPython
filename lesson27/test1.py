@@ -13,7 +13,7 @@ def get_str_length():
         return length_str
     except Exception:
         print("Ошибка! Введите целое число больше нуля!")
-        get_str_length()
+        return get_str_length()
 
 
 def calculate_combinations(length):
