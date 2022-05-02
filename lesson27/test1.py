@@ -11,7 +11,7 @@ def get_str_length():
         if length_str <= 0:
             raise Exception()
         return length_str
-    except Exception:
+    except ValueError:
         print("Ошибка! Введите целое число больше нуля!")
         return get_str_length()
 
