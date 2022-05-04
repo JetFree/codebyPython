@@ -22,7 +22,7 @@ def calculate_combinations(length):
 
 def generate_comb_list(length):
     symbol_list = string.digits + string.ascii_lowercase + string.ascii_uppercase
-    return itertools.permutations(symbol_list, length)
+    return itertools.product(symbol_list, repeat=length)
 
 
 def write_to_file(perm_iter):
