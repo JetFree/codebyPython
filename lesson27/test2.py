@@ -21,7 +21,7 @@ def get_str_length():
 
 def get_arguments():
     args = input("Выберите аргументы: \n")
-    if re.search(r"[^BSLNbsln]]", args):
+    if re.search(r"[^BSLNbsln]", args):
         print("Пожалуйста выберите корректные аргументы")
         return get_arguments()
     else:
@@ -29,16 +29,11 @@ def get_arguments():
 
 
 def build_dict(args):
-    symbol_dict = str()
-    if args.lower().find('b') != -1:
-        symbol_dict += string.ascii_uppercase
-    if args.lower().find('l') != -1:
-        symbol_dict += string.ascii_lowercase
-    if args.lower().find('s') != -1:
-        symbol_dict += string.punctuation
-    if args.lower().find('n') != -1:
-        symbol_dict += string.digits
-    return symbol_dict
+    dict_v = {'b': string.ascii_uppercase, 'l': string.ascii_lowercase, 's': string.punctuation, 'n': string.digits}
+    symbol_set = set()
+    for v in args:
+        symbol_set.add(dict_v[v])
+    return "".join(symbol_set)
 
 
 def calculate_combinations(sym_dict, length):
