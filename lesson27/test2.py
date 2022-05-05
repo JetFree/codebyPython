@@ -21,19 +21,19 @@ def get_str_length():
 
 def get_arguments():
     args = input("Выберите аргументы: \n")
-    if re.search(r"[^BSLNbsln]", args):
+    if re.search(r"[^bsln]", args, re.IGNORECASE):
         print("Пожалуйста выберите корректные аргументы")
         return get_arguments()
     else:
-        return args
+        return "".join(set(args.lower()))
 
 
 def build_dict(args):
     dict_v = {'b': string.ascii_uppercase, 'l': string.ascii_lowercase, 's': string.punctuation, 'n': string.digits}
-    symbol_set = set()
+    final_dict = str()
     for v in args:
-        symbol_set.add(dict_v[v.lower()])
-    return "".join(symbol_set)
+        final_dict += dict_v[v.lower()]
+    return final_dict
 
 
 def calculate_combinations(sym_dict, length):
