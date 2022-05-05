@@ -19,21 +19,13 @@ def get_str_length():
         return get_str_length()
 
 
-def get_arguments():
-    args = input("Выберите аргументы: \n")
-    if re.search(r"[^bsln]", args, re.IGNORECASE):
-        print("Пожалуйста выберите корректные аргументы")
-        return get_arguments()
-    else:
-        return "".join(set(args.lower()))
-
-
-def build_dict(args):
+def build_dict_with_args():
     dict_v = {'b': string.ascii_uppercase, 'l': string.ascii_lowercase, 's': string.punctuation, 'n': string.digits}
-    final_dict = str()
-    for v in args:
-        final_dict += dict_v[v.lower()]
-    return final_dict
+    final_dict = list()
+    for letter in set(input("Выберите аргументы: \n")):
+        if letter in dict_v.keys():
+            final_dict.append(dict_v[letter])
+    return "".join(final_dict)
 
 
 def calculate_combinations(sym_dict, length):
@@ -52,9 +44,8 @@ def write_to_file(perm_iter):
 
 if __name__ == "__main__":
     print_help()
-    args = get_arguments()
+    symbols = build_dict_with_args()
     str_length = get_str_length()
-    symbols = build_dict(args)
     comb_count = calculate_combinations(symbols, str_length)
     print(f"Количество комбинаций: {comb_count}")
     write_to_file(generate_comb_list(symbols, str_length))
