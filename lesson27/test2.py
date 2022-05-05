@@ -32,7 +32,7 @@ def build_dict(args):
     dict_v = {'b': string.ascii_uppercase, 'l': string.ascii_lowercase, 's': string.punctuation, 'n': string.digits}
     symbol_set = set()
     for v in args:
-        symbol_set.add(dict_v[v])
+        symbol_set.add(dict_v[v.lower()])
     return "".join(symbol_set)
 
 
