@@ -22,12 +22,8 @@ def calculate_combinations(length):
 
 def generate_comb_list(length):
     symbol_list = string.digits + string.ascii_lowercase + string.ascii_uppercase
-    return itertools.product(symbol_list, repeat=length)
-
-
-def write_to_file(perm_iter):
     with open("my_dict.txt", "w") as file:
-        for permutation in perm_iter:
+        for permutation in itertools.permutations(symbol_list, length):
             file.write("".join(permutation) + "\n")
 
 
@@ -35,5 +31,6 @@ if __name__ == "__main__":
     str_length = get_str_length()
     comb_count = calculate_combinations(str_length)
     print(f"Количество комбинаций: {comb_count}")
-    write_to_file(generate_comb_list(str_length))
+    generate_comb_list(str_length)
     print("Done!")
+
