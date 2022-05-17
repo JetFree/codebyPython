@@ -32,12 +32,12 @@ class Db_manager:
 if __name__ == "__main__":
     db_name = "example"
     login = input("Enter login: ")
-    passwd = input("Enter password: ")
-    if login and passwd:
+    if login:
         db_mng = Db_manager()
         if db_mng.is_login_exist(login):
+            passwd = input("Enter password: ")
             db_mng.verify_password(login, passwd)
         else:
-            print("No user with such username found!")
+            print("Access is denied!")
     else:
         print("Login or password can't be empty values!")
