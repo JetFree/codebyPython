@@ -27,7 +27,7 @@ def connect_database():
 
 
 def create_data():
-    mycursor = db_connect.cursor();
+    mycursor = db_connect.cursor()
     mycursor.execute(f"CREATE DATABASE IF NOT EXISTS {database_name}")
     mycursor.execute(f"USE {database_name}")
     mycursor.execute("CREATE TABLE IF NOT EXISTS product (id INT AUTO_INCREMENT PRIMARY KEY,"

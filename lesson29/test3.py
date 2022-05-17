@@ -31,10 +31,9 @@ class Db_manager:
 
 if __name__ == "__main__":
     db_name = "example"
-    login = input("Enter login: ")
-    if login:
-        db_mng = Db_manager()
-        if db_mng.is_login_exist(login):
+    if login := input("Enter login: "):
+
+        if (db_mng := Db_manager()).is_login_exist(login):
             passwd = input("Enter password: ")
             db_mng.verify_password(login, passwd)
         else:
