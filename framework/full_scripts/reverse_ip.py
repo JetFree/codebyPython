@@ -1,4 +1,4 @@
-from full_scripts import ip_address
+from . import ip_address
 import requests
 from sys import exit
 
