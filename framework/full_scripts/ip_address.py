@@ -1,6 +1,15 @@
 import socket
 
 
+def is_network_up():
+    try:
+        socket.gethostbyname("www.google.com")
+        return True
+    except socket.gaierror as e:
+        print("Program requires internet connection. Please fix the problem with connection and try later.")
+        return False
+
+
 def name():
     print("1. Host IP\n")
 
